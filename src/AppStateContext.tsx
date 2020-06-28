@@ -54,6 +54,13 @@ type Action =
   | {
       type: 'ADD_TASK';
       payload: { text: string; listId: string };
+    }
+  | {
+      type: 'MOVE_LIST';
+      payload: {
+        hoverIndex: number;
+        dragIndex: number;
+      };
     };
 
 const appStateReducer = (state: AppState, action: Action) => {
@@ -76,6 +83,13 @@ const appStateReducer = (state: AppState, action: Action) => {
         id: nanoid(),
         text: action.payload.text,
       });
+      return {
+        ...state,
+      };
+    }
+    case 'MOVE_LIST': {
+      const { hoverIndex, dragIndex } = action.payload;
+      state.lists = moveItem(state.lists, dragIndex, hoverIndex);
       return {
         ...state,
       };
