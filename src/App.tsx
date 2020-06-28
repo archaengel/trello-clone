@@ -5,14 +5,17 @@ import { Column } from './Column';
 import { AppContainer } from './styles';
 
 function App() {
-  const { state } = useAppState();
+  const { state, dispatch } = useAppState();
 
   return (
     <AppContainer>
       {state.lists.map((list, i) => (
-        <Column text={list.text} key={list.id} index={i} />
+        <Column id={list.id} text={list.text} key={list.id} index={i} />
       ))}
-      <AddNewItem toggleButtonText="+ Add another list" onAdd={console.log} />
+      <AddNewItem
+        toggleButtonText="+ Add another list"
+        onAdd={(text) => dispatch({ type: 'ADD_LIST', payload: text })}
+      />
     </AppContainer>
   );
 }
