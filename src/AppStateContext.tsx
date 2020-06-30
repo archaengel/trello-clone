@@ -4,6 +4,7 @@ import { DragItem } from './DragItem';
 import { findItemIndexById } from './utils/findItemIndexById';
 import { moveItem } from './utils/moveItem';
 import { save } from './api';
+import { withData } from './withData';
 
 interface Task {
   id: string;
@@ -25,27 +26,6 @@ interface AppStateContextProps {
   state: AppState;
   dispatch: React.Dispatch<Action>;
 }
-
-const appData: AppState = {
-  lists: [
-    {
-      id: '0',
-      text: 'To Do',
-      tasks: [{ id: 'c0', text: 'Generate app scaffold' }],
-    },
-    {
-      id: '1',
-      text: 'In Progress',
-      tasks: [{ id: 'c2', text: 'Practice prototyping' }],
-    },
-    {
-      id: '2',
-      text: 'Done',
-      tasks: [{ id: 'c3', text: 'Use TS with React' }],
-    },
-  ],
-  draggedItem: undefined,
-};
 
 const AppStateContext = createContext<AppStateContextProps>(
   {} as AppStateContextProps
@@ -142,16 +122,21 @@ export const useAppState = () => {
   return useContext(AppStateContext);
 };
 
-export const AppStateProvider = ({ children }: React.PropsWithChildren<{}>) => {
-  const [state, dispatch] = useReducer(appStateReducer, appData);
+export const AppStateProvider = withData(
+  ({
+    children,
+    initialState,
+  }: React.PropsWithChildren<{ initialState: AppState }>) => {
+    const [state, dispatch] = useReducer(appStateReducer, initialState);
 
-  useEffect(() => {
-    save(state);
-  }, [state]);
+    useEffect(() => {
+      save(state);
+    }, [state]);
 
-  return (
-    <AppStateContext.Provider value={{ state, dispatch }}>
-      {children}
-    </AppStateContext.Provider>
-  );
-};
+    return (
+      <AppStateContext.Provider value={{ state, dispatch }}>
+        {children}
+      </AppStateContext.Provider>
+    );
+  }
+);
