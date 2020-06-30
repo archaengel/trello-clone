@@ -73,6 +73,13 @@ type Action =
 
 const appStateReducer = (state: AppState, action: Action) => {
   switch (action.type) {
+    case 'SET_DRAGGED_ITEM': {
+      console.log('set dispatched', action.payload);
+      return {
+        ...state,
+        draggedItem: action.payload,
+      };
+    }
     case 'ADD_LIST': {
       return {
         ...state,
@@ -97,15 +104,9 @@ const appStateReducer = (state: AppState, action: Action) => {
     }
     case 'MOVE_LIST': {
       const { hoverIndex, dragIndex } = action.payload;
-      state.lists = moveItem(state.lists, dragIndex, hoverIndex);
       return {
         ...state,
-      };
-    }
-    case 'SET_DRAGGED_ITEM': {
-      return {
-        ...state,
-        draggedItem: action.payload,
+        lists: moveItem(state.lists, dragIndex, hoverIndex),
       };
     }
     default:

@@ -1,5 +1,3 @@
-import React from 'react';
-
 export type ColumnDragItem = {
   type: 'COLUMN';
   id: string;
@@ -8,5 +6,3 @@ export type ColumnDragItem = {
 };
 
 export type DragItem = ColumnDragItem;
-
-export const DragItem = () => {};
